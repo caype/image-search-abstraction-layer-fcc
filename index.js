@@ -5,8 +5,6 @@ var port = process.env.PORT || 8080;
 var app = express();
 const mongoDBUrl = process.env.MONGOLAB_URI;
 
-
-
 app.get('/recentSearches/all',function(req,res) {
    mongoClient.connect(mongoDBUrl,function(err,db){
        if(err) throw err;
@@ -31,55 +29,21 @@ app.get('/:queryParam?/:offset?',function(req,res){
     
     if (req.params.queryParam!= undefined || req.params.queryParam != null) {
         var jpgUrl = {
-            url:'https://api.imgur.com/3/gallery/search?q='+req.params.queryParam+'&q_type=jpg',
+            url:'https://api.imgur.com/3/gallery/search/top/?q='+req.params.queryParam,
             headers:{
                 "Authorization":"Client-ID "+process.env.client_id
             }
         };
-        var pngUrl = {
-            url:'https://api.imgur.com/3/gallery/search?q='+req.params.queryParam+'&q_type=png',
-            headers:{
-                "Authorization":"Client-ID "+process.env.client_id
-            }
-        };
-        var gifUrl = {
-            url:'https://api.imgur.com/3/gallery/search?q='+req.params.queryParam+'&q_type=gif',
-            headers:{
-                "Authorization":"Client-ID "+process.env.client_id
-            }
-        };
-
-        request(gifUrl,function(error,response,body){
-            if(error) throw error;
-            if (!error && response.statusCode == 200) {
-                var gifinfo = JSON.parse(body);
-                for (var i = 0; i < gifinfo.data.length; i++) {
-                    if(gifinfo.data[i].link.indexOf('.gif')!= -1)
-                    targetData.push({title:gifinfo.data[i].title,link:gifinfo.data[i].link});
-                }
-            }
-        });
-        
-        request(pngUrl,function(error,response,body){
-            if(error) throw error;
-            if (!error && response.statusCode == 200) {
-                var pnginfo = JSON.parse(body);
-                for (var i = 0; i < pnginfo.data.length; i++) {
-                    if(pnginfo.data[i].link.indexOf('.png')!= -1)
-                    targetData.push({title:pnginfo.data[i].title,link:pnginfo.data[i].link});
-                }
-            }
-        });
         
         request(jpgUrl,function(error,response,body){
             if(error) throw error;
             
             if (!error && response.statusCode == 200) {
-                var jpginfo = JSON.parse(body);
+                var imginfo = JSON.parse(body);
 
-                for (var i = 0; i <  jpginfo.data.length; i++) {
-                    if( jpginfo.data[i].link.indexOf('.jpg')!= -1)
-                    targetData.push({title: jpginfo.data[i].title,link: jpginfo.data[i].link});
+                for (var i = 0; i <  imginfo.data.length; i++) {
+                    if( imginfo.data[i].link.indexOf('.jpg')!= -1 || imginfo.data[i].link.indexOf('.png')!= -1 || imginfo.data[i].link.indexOf('.gif')!= -1)
+                    targetData.push({title: imginfo.data[i].title,link: imginfo.data[i].link,size:imginfo.data[i].size,type:imginfo.data[i].type});
                 }
                 
                 mongoClient.connect(mongoDBUrl,function(err,db){
