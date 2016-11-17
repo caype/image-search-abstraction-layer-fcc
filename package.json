@@ -1,0 +1,24 @@
+{
+  "name": "image-search-abstraction-layer-fcc",
+  "version": "1.0.0",
+  "description": "code for Image Search Abstraction Layer API challenge at Free Code Camp.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start":"node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/caype/image-search-abstraction-layer-fcc.git"
+  },
+  "author": "Chaya",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/caype/image-search-abstraction-layer-fcc/issues"
+  },
+  "homepage": "https://github.com/caype/image-search-abstraction-layer-fcc#readme",
+  "dependencies": {
+    "express": "^4.14.0",
+    "request": "^2.78.0"
+  }
+}
