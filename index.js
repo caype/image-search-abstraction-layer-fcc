@@ -9,7 +9,7 @@ app.get('/recentSearches',function(req,res) {
    mongoClient.connect(mongoDBUrl,function(err,db){
        if(err) throw err;
        var recentSearchTable = db.collection('imageAbstractionRecentSearches');
-       recentSearchTable.find().sort({_id:-1}).limit(20).toArray(function(err,searchResults){
+       recentSearchTable.find({}).sort({_id:-1}).limit(20).toArray(function(err,searchResults){
            if(err) throw err;
 
            if(searchResults.length>0)
@@ -31,7 +31,7 @@ app.get('/delete',function(req,res){
     }); 
 });
 
-app.get('/:queryParam*?/:offset*?',function(req,res){
+app.get('/:queryParam*?',function(req,res){
     
     var targetData=[];
     var dateObj = new Date().getTime();
@@ -45,8 +45,6 @@ app.get('/:queryParam*?/:offset*?',function(req,res){
         };
         
         request(RequestUrl,function(error,response,body){
-            if(error) throw error;
-            
             if (!error && response.statusCode == 200) {
                 var info = JSON.parse(body);
 
@@ -54,14 +52,13 @@ app.get('/:queryParam*?/:offset*?',function(req,res){
                     if(info.data[i].link.indexOf('.jpg')!= -1 || info.data[i].link.indexOf('.png')!= -1 || info.data[i].link.indexOf('.gif')!= -1)
                     targetData.push({title:info.data[i].title,link:info.data[i].link});
                 }
-                    /*
-                    if(req.params.offset!= undefined || req.params.offset!=null){
-                        if(targetData.length>=10*req.params.offset){
-                            var fval = req.params.offset==1?0:req.params.offset-1;
-                            targetData=targetData.slice(10*fval,10*req.params.offset);    
+                    
+                    if(req.query.offset!= undefined || req.query.offset!=null){
+                        if(targetData.length>req.query.offset){
+                            var SlicedData = targetData.slice(0,req.query.offset);    
+                            targetData = SlicedData;
                         }
                     }
-                    */
                     
                 mongoClient.connect(mongoDBUrl,function(err,db){
                     if(err) throw err;
