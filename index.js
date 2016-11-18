@@ -75,7 +75,7 @@ app.get('/:queryParam*?',function(req,res){
         });
         
     }else{
-        res.send({error:"enter a search param in the format : https://aqueous-chamber-90195.herokuapp.com/{query - required}/{offset - optional}"});
+        res.send({format:"enter a search param in the format : https://aqueous-chamber-90195.herokuapp.com/{query - required}?{offset - optional}",recent:"https://aqueous-chamber-90195.herokuapp.com/recentSearches"});
     }
 });
 
