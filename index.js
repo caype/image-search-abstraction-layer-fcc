@@ -9,7 +9,7 @@ app.get('/recentSearches',function(req,res) {
    mongoClient.connect(mongoDBUrl,function(err,db){
        if(err) throw err;
        var recentSearchTable = db.collection('imageAbstractionRecentSearches');
-       recentSearchTable.find().sort({_id:1}).toArray(function(err,searchResults){
+       recentSearchTable.find().sort({_id:-1}).limit(20).toArray(function(err,searchResults){
            if(err) throw err;
 
            if(searchResults.length>0)
